@@ -12,6 +12,10 @@ bot = telebot.TeleBot(os.getenv('telebot_token'))
 def start(message):
     bot.send_message(message.chat.id, 'Привет! Напиши название города!')
 
+@bot.message_handler(commands=['check'])
+def check(message):
+    bot.send_message(message.chat.id, f'Проверка')
+
 @bot.message_handler(content_types=['text'])
 def get_weather(message):
     city = message.text.strip().lower()
