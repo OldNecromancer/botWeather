@@ -26,9 +26,11 @@ def start(message):
 def callback_handler(call: CallbackQuery):
     if call.data == 'greetings':
         bot.send_message(call.message.chat.id, "Привет, это твой погодный бот!")
+        bot.answer_callback_query(call.id)
     if call.data == 'weather':
         bot.send_message(call.message.chat.id, "Пожалуйста, введите название города для прогноза погоды.")
         bot.register_next_step_handler(call.message, get_weather)
+        bot.answer_callback_query(call.id)
 
 @bot.message_handler(content_types=['text'])
 def get_weather(message):
