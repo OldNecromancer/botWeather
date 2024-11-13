@@ -22,10 +22,14 @@ catalog_list.add(InlineKeyboardButton(text='👋 Приветствие', callba
 def start(message):
     bot.send_message(message.chat.id, 'Привет! Я помогу тебе узнать прогноз погоды!', reply_markup=catalog_list)
 
+def menu_replier(message):
+    bot.send_message(message.chat.id, 'Ознакомься с пунктами меню!', reply_markup=catalog_list)
+
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call: CallbackQuery):
     if call.data == 'greetings':
         bot.send_message(call.message.chat.id, "Привет, это твой погодный бот!")
+        menu_replier(call.message)
         bot.answer_callback_query(call.id)
     if call.data == 'weather':
         bot.send_message(call.message.chat.id, "Пожалуйста, введите название города для прогноза погоды.")
@@ -35,11 +39,13 @@ def callback_handler(call: CallbackQuery):
 @bot.message_handler(content_types=['text'])
 def get_weather(message):
     city = message.text.strip().lower()
-    result = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={os.getenv("open_weather_token")}&units=metric')
+    result = requests.get(f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={os.getenv("open_weather_token")}&units=metric', verify=False)
     if result.status_code == 200:
         data = json.loads(result.text)
         bot.reply_to(message, f'Погода сейчас: {data["main"]["temp"]}°C')
+        menu_replier(message)
     else:
         bot.reply_to(message, f'Не могу найти такой город!')
+        menu_replier(message)
 
 bot.polling(non_stop=True)
