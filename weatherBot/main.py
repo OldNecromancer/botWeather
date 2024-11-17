@@ -20,10 +20,10 @@ CREATE TABLE IF NOT EXISTS users (
     chat_id INTEGER
 )
 ''')
-conn.commit()  # Подтверждаем изменения
+conn.commit()
 conn.close()
 
-# Для добавления пользователя в БД
+# добавляем юзера в бд
 def add_user_to_db(username, chat_id):
     conn = sqlite3.connect('my_database.db')
     cursor = conn.cursor()
